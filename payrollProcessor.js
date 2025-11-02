@@ -2,8 +2,7 @@
 import fs from "fs";
 import pdf from "pdf-parse";
 import { jsPDF } from "jspdf";
-import autoTable from "jspdf-autotable";
-import csv from "csv-parser";
+import "jspdf-autotable"; // ✅ correct ES module import (no named import)
 
 const pdfPath = "PAYROLL_REGISTER.pdf";
 const employeePdf = "individual_report.pdf";
@@ -75,7 +74,7 @@ function generatePDFs(records, totals) {
     r.amount.toFixed(2),
   ]);
 
-  autoTable(doc1, {
+  doc1.autoTable({
     startY: 25,
     head: [["Personnel No.", "Code", "Wage Type", "Amount"]],
     body,
@@ -97,7 +96,7 @@ function generatePDFs(records, totals) {
     total.toFixed(2),
   ]);
 
-  autoTable(doc2, {
+  doc2.autoTable({
     startY: 25,
     head: [["Code", "Wage Type", "Total Amount (PKR)"]],
     body: body2,
