@@ -1,13 +1,19 @@
-// payrollProcessor.js
 import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 import pdf from "pdf-parse";
 import { jsPDF } from "jspdf";
-import "jspdf-autotable"; // ✅ correct ES module import (no named import)
+import "jspdf-autotable";
 
-const pdfPath = "PAYROLL_REGISTER.pdf";
-const employeePdf = "individual_report.pdf";
-const budgetPdf = "monthly_budget.pdf";
-const debugFile = "debug.txt"; // 🧩 debug output file
+// === Resolve current working directory ===
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const pdfPath = path.join(__dirname, "PAYROLL_REGISTER.pdf");
+const employeePdf = path.join(__dirname, "individual_report.pdf");
+const budgetPdf = path.join(__dirname, "monthly_budget.pdf");
+const debugFile = path.join(__dirname, "debug.txt");
+
 
 const masterWages = {
   "0001": "Basic Pay",
@@ -112,3 +118,4 @@ function generatePDFs(records, totals) {
   doc2.save(budgetPdf);
   console.log("📄 Saved:", budgetPdf);
 }
+
