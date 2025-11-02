@@ -90,10 +90,25 @@ function generatePDFs(records, totals) {
   doc1.save(employeePdf);
   console.log("📄 Saved:", employeePdf);
 
-  // === 2️⃣ Monthly Budget Summary ===
+    // === 2️⃣ Monthly Budget Summary ===
   const doc2 = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
   doc2.setFont("times", "bold");
   doc2.text("Monthly Budget Summary", 14, 15);
   doc2.setFont("times", "normal");
 
-  const body2 = Object.entries(tota
+  const body2 = Object.entries(totals).map(([code, { name, total }]) => [
+    code,
+    name,
+    total.toFixed(2),
+  ]);
+
+  doc2.autoTable({
+    startY: 25,
+    head: [["Code", "Wage Type", "Total Amount (PKR)"]],
+    body: body2,
+    styles: { fontSize: 10 },
+    headStyles: { fillColor: [46, 204, 113] },
+  });
+  doc2.save(budgetPdf);
+  console.log("📄 Saved:", budgetPdf);
+}
