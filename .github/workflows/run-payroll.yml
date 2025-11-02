@@ -11,10 +11,7 @@ on:
 jobs:
   run:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./budget   # 👈 tell GitHub to run everything inside your budget folder
-
+    # 👇 remove extra working-directory (GitHub already places code in /budget/budget)
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -26,14 +23,16 @@ jobs:
 
     - name: Install dependencies
       run: npm install
+      working-directory: ./   # 👈 keep this root-level; no nested folder
 
     - name: Generate Payroll PDFs
       run: node payrollProcessor.js
+      working-directory: ./   # 👈 run script from repo root
 
     - name: Upload Generated PDFs
       uses: actions/upload-artifact@v4
       with:
         name: payroll-pdfs
         path: |
-          budget/individual_report.pdf
-          budget/monthly_budget.pdf
+          individual_report.pdf
+          monthly_budget.pdf
