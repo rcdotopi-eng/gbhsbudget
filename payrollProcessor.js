@@ -7,6 +7,7 @@ import "jspdf-autotable"; // ✅ correct ES module import (no named import)
 const pdfPath = "PAYROLL_REGISTER.pdf";
 const employeePdf = "individual_report.pdf";
 const budgetPdf = "monthly_budget.pdf";
+const debugFile = "debug.txt"; // 🧩 debug output file
 
 const masterWages = {
   "0001": "Basic Pay",
@@ -35,6 +36,11 @@ async function extractFromPDF() {
   const buffer = fs.readFileSync(pdfPath);
   const data = await pdf(buffer);
   const text = data.text;
+
+  // 🧩 DEBUG: Write extracted text to file for inspection
+  fs.writeFileSync(debugFile, text);
+  console.log(`🧾 Raw PDF text exported to ${debugFile}`);
+
   const employees = text.split(/Personnel Number:\s*(\d+)/).slice(1);
   const records = [];
   const totals = {};
@@ -90,22 +96,4 @@ function generatePDFs(records, totals) {
   doc2.text("Monthly Budget Summary", 14, 15);
   doc2.setFont("times", "normal");
 
-  const body2 = Object.entries(totals).map(([code, { name, total }]) => [
-    code,
-    name,
-    total.toFixed(2),
-  ]);
-
-  doc2.autoTable({
-    startY: 25,
-    head: [["Code", "Wage Type", "Total Amount (PKR)"]],
-    body: body2,
-    styles: { fontSize: 10 },
-    headStyles: { fillColor: [46, 204, 113] },
-  });
-  doc2.save(budgetPdf);
-  console.log("📄 Saved:", budgetPdf);
-}
-
-// === Run Everything ===
-extractFromPDF();
+  const body2 = Object.entries(tota
